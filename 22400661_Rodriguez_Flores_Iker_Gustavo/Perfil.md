@@ -23,7 +23,7 @@
 
 
 
-\#Habilidades
+\#Tecnologia
 
 * Manejo de Bases de Datos relacionales
 * Aprendizaje Rapido
@@ -37,7 +37,8 @@
 * Español nativo
 * Inglés C1
 
-
+\#Contacto
+* Correo: ikgurodriguezfl@ittepic.edu.mx
 
 \#Pelicula recomendada
 
