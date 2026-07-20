@@ -1,0 +1,14 @@
+{
+  "name": "apibase",
+  "version": "1.0.0",
+  "description": "API base para Unidad 4",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "5.2.1",
+    "morgan": "1.11.0",
+    "mongoose": "9.7.4"
+  }
+}
