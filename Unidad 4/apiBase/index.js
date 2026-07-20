@@ -44,7 +44,7 @@ app.get("/alumnos", async (req,res) =>{
 
 app.get("/alumnos/:id", async (req,res) =>{
     try{
-        const id = Number(req.params.id);
+        const id = req.params.id;
         const alumno = await Alumno.findById(id);
         if(!alumno){
             return res.status(404).json({mensaje: "Alumno no encontrado"});
@@ -83,7 +83,7 @@ app.post("/alumnos", async (req,res) =>{
 
 app.put("/alumnos/:id", async (req,res) =>{
     try{
-        const id = Number(req.params.id);
+        const id = req.params.id;
         const {nombre, carrera, semestre} = req.body;
 
         if(!nombre || !carrera || !semestre){
@@ -114,7 +114,7 @@ app.put("/alumnos/:id", async (req,res) =>{
 
 app.delete("/alumnos/:id", async(req,res)=>{
     try{
-    const id = Number(req.params.id);
+    const id = req.params.id;
     const alumnoEliminado = await Alumno.findByIdAndDelete(id);
     if (!alumnoEliminado){
         return res.status(404).json({
