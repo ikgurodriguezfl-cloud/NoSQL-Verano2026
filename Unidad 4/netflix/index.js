@@ -27,6 +27,22 @@ const peliculaSchema = new mongoose.Schema(
         timestamps: true
     }
 );
+
+const serieSchema = new mongoose.Schema(
+    {
+        titulo: {type: String, required: true},
+        genero: {type: String, required: true},
+        año: {type: Number, required: true},
+        temporadas: {type: Number, required: true},
+        episodios: {type: Number, required: true},
+        idioma: {type: String, required: true},
+        calificacion: {type: Number, required: true}
+    },
+    {
+        timestamps: true
+    }
+);
+
 const Pelicula = mongoose.model("Pelicula", peliculaSchema, "peliculas");
 
 app.get("/peliculas", async (req,res) =>{
@@ -133,6 +149,118 @@ app.delete("/peliculas/:id", async(req,res)=>{
     }
     
 });   
+
+
+const Serie = mongoose.model("Serie", serieSchema, "series");
+
+app.get("/series", async (req,res) =>{
+    try{
+        const series = await Serie.find();
+        res.json(series);
+    }
+    catch(error){
+        res.status(500).json({
+            mensaje: "Error al obtener los datos",
+            error: error
+        });
+    }
+});
+
+
+app.get("/series/:id", async (req,res) =>{
+    try{
+        const id = req.params.id;
+        const serie = await Serie.findById(id);
+        if(!serie){
+            return res.status(404).json({mensaje: "Serie no encontrado"});
+        }
+        res.json(serie);
+
+    }catch(error){
+        res.status(500).json({
+            mensaje: "Error al obtener los datos",
+            error: error
+        });
+    }
+    
+});
+
+app.post("/series", async (req,res) =>{
+    try{
+    const {titulo, genero, año, temporadas, episodios, idioma, calificacion} = req.body;
+    if(!titulo || !genero || !año || !temporadas || !episodios || !idioma || !calificacion){
+        return res.status(400).json({mensaje: "Faltan datos del serie"});
+    }
+    const nuevaSerie = new Serie({
+        titulo, genero, año, temporadas, episodios, idioma, calificacion
+    });
+    const serieGuardado = await nuevaSerie.save();
+    res.json({mensaje: "Serie registrado correctamente", serie: serieGuardado});
+    
+    }catch(error){
+        res.status(500).json({
+            mensaje: "Error al registrar el serie",
+            error: error
+        });
+    }
+
+});
+
+app.put("/series/:id", async (req,res) =>{
+    try{
+        const id = req.params.id;
+        const {titulo, genero, año, temporadas, episodios, idioma, calificacion} = req.body;
+
+        if(!titulo || !genero || !año || !temporadas || !episodios || !idioma || !calificacion){
+            return res.status(400).json({mensaje: "Faltan datos del serie"});
+        }
+        
+        const serieActualizado = await Serie.findByIdAndUpdate(id, 
+            {titulo, genero, año, temporadas, episodios, idioma, calificacion},
+            {new: true, runValidators: true}
+        )
+        if(!serieActualizado){
+            return res.status(404).json({mensaje: "Serie no encontrado"});
+        }
+        res.json({
+            mensaje: "Serie actualizado correctamente",
+            serie: serieActualizado
+        });
+
+    }catch(error){
+        res.status(500).json({
+            mensaje: "Error al actualizar el serie",
+            error: error
+        });
+    }
+    
+
+});
+
+app.delete("/series/:id", async(req,res)=>{
+    try{
+    const id = req.params.id;
+    const serieEliminado = await Serie.findByIdAndDelete(id);
+    if (!serieEliminado){
+        return res.status(404).json({
+            mensaje: "Serie no encontrado"
+        });
+    }
+    res.json({
+        mensaje: "Serie eliminado correctamente",
+        serie: serieEliminado
+    });
+    }catch(error){
+        res.status(500).json({
+            mensaje: "Error al eliminar el serie",
+        });
+    }
+    
+});   
+
+app.get("/", (req,res) =>{
+    res.send("Bienvenido a la API de Netflix");
+});
 
 
 app.listen(PORT, () => {
